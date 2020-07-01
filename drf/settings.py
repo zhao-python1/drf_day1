@@ -126,3 +126,24 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+#配置drf的相干参数
+REST_FRAMEWORK = {
+
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',  # json格式的渲染器
+        'rest_framework.renderers.BrowsableAPIRenderer',     # 浏览器渲染可视化的API
+    ],
+#解析器全局
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser', #json得
+        'rest_framework.parsers.FormParser',#www-url-encode
+        'rest_framework.parsers.MultiPartParser' #支持表单的参数解析
+    ],
+    # 异常处理方法
+# Exception handling
+#     'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
+    'EXCEPTION_HANDLER': 'utils.exceptions.exception_handler',#使用自定义异常
+#     'NON_FIELD_ERRORS_KEY': 'non_field_errors',
+}
+
+MEDIA_ROOT = os.path.join(BASE_DIR,"media/")

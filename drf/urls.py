@@ -15,8 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.static import serve
+
+from drf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('app1/', include('app1.urls')),
+    path('xue/', include('xue.urls')),
+    #指定图片路径
+    path(r'media/(?p<path>).*',serve,{"document_root":settings.MEDIA_ROOT}),
 ]

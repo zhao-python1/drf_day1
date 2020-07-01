@@ -1,13 +1,14 @@
 from django.http import JsonResponse
 from django.shortcuts import render,HttpResponse
-
+from rest_framework import settings
 # Create your views here.
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt,csrf_protect
+from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from app1.models import User
 
 '''
@@ -48,7 +49,9 @@ class UserView(View):
         user_id = kwargs.get("id")
         if user_id:
             #查到返回到前段页面
-          user_val = User.objects.filter(pk=user_id).values("username","password","gender").first()
+
+          # user_val = User.objects.filter(pk=user_id).values("username","password","gender").first()
+          user_val = User.objects.get(pk = user_id)
           if user_val :
               return JsonResponse({
                   "status":200,
@@ -104,7 +107,10 @@ class UserView(View):
 
 # drf的视图
 class UserAPIView(APIView):
-#
+
+    #局部优先
+    renderer_classes = (JSONRenderer,)
+
     def get(self, request, *args, **kwargs):
         # request：<rest_framework.request.Request>
         # get(self, request, *args, **kwargs):
@@ -122,3 +128,18 @@ class UserAPIView(APIView):
 
         print(request.data)
         return Response("POST GET SUCCESS")
+
+# 局部使用解析器
+class StudentAPIView(APIView):
+
+    # 局部使用解析器
+    # parser_classes = [MultiPartParser]
+    parser_classes = [JSONRenderer]
+
+    def post(self, request, *args, **kwargs):
+        print("POST方法")
+
+        # print(request.POST)
+        print(request.data)
+
+        return Response("POST方法访问成功")
